@@ -1,0 +1,118 @@
+﻿
+@{
+    /**/
+
+    /**/
+    //var test = DependencyResolver.Current.GetService<IWorkContext>();
+
+    //success messages
+    var successMessages = new List<string>();
+    if (TempData["$Notifications-Success"] != null)
+    {
+        successMessages.AddRange(TempData["$Notifications-Success"] as IList<string>);
+    }
+    if (ViewData["$Notifications-Success"] != null)
+    {
+        successMessages.AddRange(ViewData["$Notifications-Success"] as IList<string>);
+    }
+
+
+    //error messages
+    var errorMessages = new List<string>();
+    if (TempData["$Notifications-Error"] != null)
+    {
+        errorMessages.AddRange(TempData["$Notifications-Error"] as IList<string>);
+    }
+    if (ViewData["$Notifications-Error"] != null)
+    {
+        errorMessages.AddRange(ViewData["$Notifications-Error"] as IList<string>);
+    }
+
+
+    //warning messages
+    var warningMessages = new List<string>();
+    if (TempData["$Notifications-Warning"] != null)
+    {
+        warningMessages.AddRange(TempData["$Notifications-Warning"] as IList<string>);
+    }
+    if (ViewData["$Notifications-Warning"] != null)
+    {
+        warningMessages.AddRange(ViewData["$Notifications-Warning"] as IList<string>);
+    }
+}
+
+@if (successMessages.Count > 0)
+{
+    @*<div class="alert alert-success alert-dismissable customize-alert-box-success">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            @foreach (var message in successMessages)
+            {
+                <i class="fas fa-bell"></i> @message
+            }
+        </div>*@
+
+    <div class="alert alert-success" style="z-index: 99999">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <i class="material-icons">close</i>
+        </button>
+        <span>
+            <b> Success - </b>
+
+            @foreach (var message in successMessages)
+            {
+                @message
+            }
+        </span>
+    </div>
+}
+
+@if (errorMessages.Count > 0)
+{
+    @*<div class="alert alert-danger alert-dismissable customize-alert-box-error">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            @foreach (var message in errorMessages)
+            {
+                <i class="fas fa-exclamation"></i> @message
+            }
+        </div>*@
+
+    <div class="alert alert-danger" style="z-index: 99999">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <i class="material-icons">close</i>
+        </button>
+        <span>
+            <b> Error - </b>
+            @foreach (var message in errorMessages)
+            {
+                @message
+            }
+        </span>
+    </div>
+}
+
+@if (warningMessages.Count > 0)
+{
+    @*<div class="alert alert-warning alert-dismissable customize-alert-box-warning">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            @foreach (var message in warningMessages)
+            {
+                <i class="fas fa-exclamation-triangle"></i> @message
+                <br />
+            }
+        </div>*@
+
+
+    <div class="alert alert-warning" style="z-index: 99999">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <i class="material-icons">close</i>
+        </button>
+        <span>
+            <b> Warning - </b>
+            @foreach (var message in warningMessages)
+            {
+                @message
+            }
+        </span>
+    </div>
+}
+

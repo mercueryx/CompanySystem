@@ -1,0 +1,153 @@
+﻿@{
+    ViewBag.Title = "StockTake";
+
+}
+
+@section Breadcrumbs
+{
+    <div class="navbar-wrapper">
+        <a class="navbar-brand" href="javascript:;">Settings - View Consignee</a>
+    </div>
+
+}
+
+
+@section Content
+{
+    @using (Html.BeginForm())
+    {
+
+        @Html.AntiForgeryToken()
+
+        <div class="row">
+            <div class="card">
+
+                <div class="card-body text-right">
+
+
+                    <a href="@Url.RouteUrl("AddConsignee")" class="btn btn-primary">Add Consignee</a>
+
+                    @*<a href="@Url.RouteUrl("ViewItem")" class="btn btn-primary">View Item</a>*@
+                </div>
+            </div>
+            <div class="card" style="margin-top:60px">
+                <div class="card-header card-header-primary">
+                    <div class="row">
+                        <div class="col-md-6 justify-content-center">
+                            <h4 class="card-title text-left">Consignee List</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <table id="list" class="table table-hover table-bordered table-striped display responsive text-center">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th data-priority="1">Ah Code</th>
+                                                <th>Ah Name</th>
+                                                <th data-priority="2">Status</th>
+
+
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@section scripts {
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            var $list = $('#list').DataTable({
+                "ordering": false,
+                "responsive": true,
+
+
+
+                "info": false,
+                //"deferRender": true,
+                "scrollX": true,
+                "autoWidth": false,
+                //"scrollY": true,
+                //"scrollCollapse": true,
+                //"scroller": true,
+                "ajax": {
+                    "cache": false,
+                    "url": "@Url.RouteUrl("ConsigneeList")",
+                    "type": "POST",
+                    "data": function (d) {
+                        if (!d) {
+                            d = {};
+                        }
+                        @*d.ah_code = $('#@Html.IdFor(x => x.AccountHolderCode)').val();*@
+                        //return d;
+                        return addAntiForgeryToken(d);
+                    }
+                },
+                "columns": [
+                    {
+                        "data": "ID",
+                        "visible": false
+                    },
+                    { "data": "Ah_code" },
+                    { "data": "Ah_name" },
+                    { "data": "Status" },
+                    //{
+                    //    "data": "To_bill_qty",
+                    //    //contecontenteditable:true,
+
+                    //},
+                    //{
+                    //    "data": "Pro_qty",
+                    //    //contecontenteditable:true,
+
+                    //},
+
+
+                    {
+                        "data": "ID",
+                        "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+
+
+                            $(nTd).html("<a  href='@Url.RouteUrl("EditConsigneeData")/" + oData.ID + "' class='text-center btn btn-primary'>Edit</a>");
+
+                        }
+                    },
+                ]
+
+
+
+                //});
+
+
+
+            });
+
+            $("#AccountHolderCode").change(function () {
+                $list.ajax.reload(null, false);
+                $list.draw(true);
+
+            });
+
+        });
+
+
+    </script>
+}

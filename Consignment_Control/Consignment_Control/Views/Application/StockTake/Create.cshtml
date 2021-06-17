@@ -1,0 +1,266 @@
+﻿
+
+@model Consignment_Control.Models.StockTake.StockTakeModel
+
+
+@{
+    ViewBag.Title = "StockTake";
+
+}
+
+@section Breadcrumbs
+{
+    <div class="navbar-wrapper">
+        <a class="navbar-brand" href="javascript:;">Stock Take</a>
+    </div>
+
+}
+
+
+@section Content
+{
+    @using (Html.BeginForm())
+    {
+
+        @Html.AntiForgeryToken()
+    
+
+        <div id="hiddenStateID"></div>
+
+        @*<input name="Inv_Data.ID" value="1" />
+        <input name="Inv_Data.Catalog" value="123" />
+        <input name="Inv_Data.Description" value="321" />
+        <input name="Inv_Data.On_hand_qty" value="4" />
+        <input name="Inv_Data.On_hold_qty" value="55" />
+        <input name="Inv_Data.Counted_qty" value="2" />
+        <input name="Inv_Data.Counted_on_hold_qty" value="33" />*@
+
+        <div class="row">
+
+            @*@if (Model != null && Model.Inv_list != null)
+            {
+                for (int i = 0; i < Model.Inv_list.Count; i++)
+                {
+
+
+                    @Html.HiddenFor(modelItem => Model.Inv_list[i].ID)
+                    @Html.HiddenFor(modelItem => Model.Inv_list[i].Catalog)
+                    @Html.HiddenFor(modelItem => Model.Inv_list[i].Description)
+                    @Html.HiddenFor(modelItem => Model.Inv_list[i].On_hand_qty)
+                    @Html.HiddenFor(modelItem => Model.Inv_list[i].Counted_qty)
+                    @Html.HiddenFor(modelItem => Model.Inv_list[i].On_hold_qty)
+                    @Html.HiddenFor(modelItem => Model.Inv_list[i].Counted_on_hold_qty)
+                }
+            }*@
+            <div class="card">
+
+                <div class="card-body text-right">
+                    <button  class="btn btn-primary " id="submit-button" name="submit-button" value="save-button">Save</button>
+                    <button class="btn btn-primary" id="print-button" name="print-button"  value="print-button">Download PDF</button>
+
+                    <a href="@Url.RouteUrl("ViewStockTake")" class="btn btn-primary">View</a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header card-header-primary">
+                    <div class="row">
+                        <div class="col-md-6 justify-content-center">
+                            <h4 class="card-title text-left">Stock Take Form</h4>
+                            @*<small>* Please save the progress before leave this page.</small>*@
+                        </div>
+
+
+                  
+                    </div>
+                </div>
+                <div class="card-body">
+
+
+                    <div class="row">
+
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.AccountHolderCode)
+                                @Html.DropDownListFor(m => m.AccountHolderCode, Model.SelectAccountHolder, new { @class = "cust-FormControl" })
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row" style="overflow-x: auto; ">
+                        <div class="col-md-12">
+                            <div class="form-group"  >
+                                <table id="list" class="table table-hover table-bordered table-striped display responsive text-center">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Catalog No</th>
+                                            <th data-priority="1">Description</th>
+                                            <th>On Hand Qty</th>
+                                            <th data-priority="1">Counted Qty</th>
+                                            @*<th>On Hold Qty</th>
+                                            <th data-priority="1">Counted On Hold Qty</th>*@
+                                            @*<th >Action</th>*@
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    @*</form>*@
+                </div>
+            </div>
+        </div>
+    }
+
+}
+
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+
+
+            var $list = $('#list').DataTable({
+                "ordering": false,
+                   "responsive": true,
+                    "lengthChange": false,
+                    "searching": false,
+                    "paging": false,
+
+                "info": false,
+                //"deferRender": true,
+                "scrollX": true,
+                "autoWidth": false,
+                //"scrollY": true,
+                //"scrollCollapse": true,
+                //"scroller": true,
+            "ajax": {
+                "cache": false,
+                "url": "@Url.RouteUrl("GetConsigneeInv")",
+                "type": "POST",
+                "data": function (d) {
+                    if (!d) {
+                        d = {};
+                    }
+                    d.ah_code = $('#@Html.IdFor(x => x.AccountHolderCode)').val();
+                    //return d;
+                    return addAntiForgeryToken(d);
+                }
+            },
+            "columns": [
+                {
+                     "data": "ID",
+                    "visible":false
+                },
+                { "data": "Catalog" },
+                {"data": "Description" },
+                { "data": "On_hand_qty" },
+                {
+                   "data": "Counted_qty",
+                    //contecontenteditable:true,
+                 "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                     $(nTd).html("<input type='number' step='1' pattern='[0 - 9]' onkeypress='return !(event.charCode == 46)' min='0' value='" + oData.Counted_qty +"' class='cust-FormControl'>");
+
+                    }
+
+
+
+                },
+                //{ "data": "On_hold_qty" },
+
+                //{
+                //    "data": "Counted_on_hold_qty",
+                //    //contecontenteditable:true,
+                //    "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                //        $(nTd).html("<input type='number' step='1' pattern='[0 - 9]' onkeypress='return !(event.charCode == 46)' min='0' value='" + oData.Counted_on_hold_qty + "' class='cust-FormControl'>");
+
+                //    }
+
+                //},
+
+
+                @*{
+                   "data": "ID",
+                    "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                        $(nTd).html("<a  href='@Url.RouteUrl("EditCatalogQty")/" + oData.ID + "' class='text-center btn btn-primary'>Edit</a>");
+
+                    }
+                },*@
+                ]
+
+
+
+            });
+
+
+
+
+            $("#AccountHolderCode").change(function () {
+                $list.ajax.reload(null, false);
+                $list.draw(true);
+
+            });
+
+
+            $("#submit-button").click(function (e) {
+                var form_data = $list.rows().data();
+                if (confirm("Confirm to save this stock take list")) {
+
+                
+                    var theArray = [];
+
+                    for (var i = 0; i < form_data.length; i++) {
+                        var items = {};
+                        var ID = form_data[i].ID;
+                        var Catalog = form_data[i].Catalog;
+                        var Description = form_data[i].Description;
+                        var On_hand_qty = form_data[i].On_hand_qty;
+                        var counted = form_data.cell(i, 4).nodes().to$().find('input').val()
+                        //var On_hold_qty = form_data[i].On_hold_qty;
+                        //var counted_on_hold = form_data.cell(i, 6).nodes().to$().find('input').val()
+                        items.ID = ID;
+                        items.Catalog = Catalog;
+                        items.Description = Description;
+                        items.On_hand_qty = On_hand_qty;
+                        items.Counted_qty = counted;
+                        //items.On_hold_qty = On_hold_qty;
+                        //items.Counted_on_hold_qty = counted_on_hold;
+
+
+                        if (On_hand_qty < counted)
+                        {
+                            alert( Description + " Counted qty cannot more than on hand qty, please using adjustment to change the quantity");
+                            return false;
+                        }
+
+                        //if (On_hold_qty < counted_on_hold) {
+                        //    alert( Description + " on hold qty cannot more than on counted on hold qty.");
+                        //    return false;
+                        //}
+
+                        $("#hiddenStateID").append("<input type='hidden' id='Inv_list_" + i +"__ID' name='Inv_list["+i+"].ID' value='" + items.ID + "'>");
+                        $("#hiddenStateID").append("<input type='hidden' id='Inv_list_" + i +"__Catalog' name='Inv_list[" + i +"].Catalog' value='" + items.Catalog + "'>");
+                        $("#hiddenStateID").append("<input type='hidden' id='Inv_list_" + i +"__Description' name='Inv_list[" + i +"].Description' value='" + items.Description + "'>");
+                        $("#hiddenStateID").append("<input type='hidden' id='Inv_list_" + i +"__On_hand_qty' name='Inv_list[" + i +"].On_hand_qty' value='" + items.On_hand_qty + "'>");
+                        $("#hiddenStateID").append("<input type='hidden' id='Inv_list_" + i +"__Counted_qty' name='Inv_list[" + i +"].Counted_qty' value='" + items.Counted_qty + "'>");
+                        //$("#hiddenStateID").append("<input type='hidden' id='Inv_list_" + i +"__On_hold_qty' name='Inv_list[" + i +"].On_hold_qty' value='" + items.On_hold_qty + "'>");
+                        //$("#hiddenStateID").append("<input type='hidden' id='Inv_list_" + i +"__Counted_on_hold_qty' name='Inv_list[" + i +"].Counted_on_hold_qty' value='" + items.Counted_on_hold_qty + "'>");
+
+
+                    }
+               
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+
+
+
+    });
+    </script>
+}
+

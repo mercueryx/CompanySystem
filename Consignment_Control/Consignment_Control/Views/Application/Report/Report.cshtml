@@ -1,0 +1,367 @@
+﻿@model Consignment_Control.Models.Report.ReportModel
+@{
+    ViewBag.Title = "StockTake";
+
+}
+@section Breadcrumbs
+{
+    <div class="navbar-wrapper">
+        <a class="navbar-brand" href="javascript:;">Report</a>
+    </div>
+
+}
+
+
+
+@section Content
+{
+
+    @using (Html.BeginForm())
+    {
+
+        @Html.AntiForgeryToken()
+
+        <div id="hiddenStateID"></div>
+        <div class="row">
+            <div class="card">
+
+                <div class="card-body">
+
+
+                    <div class="row">
+                        <div class="col-12"><h4 class="font-weight-bold">Search Filter</h4><hr /></div>
+                        <div class="col-lg-4">
+                        </div>
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.Ah_code)
+                                        @Html.DropDownListFor(m => m.Ah_code, Model.SelectAccountHolder, new { @class = "cust-FormControl" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="bmd-label-floating">Start Date</label>
+                                        <input class="cust-FormControl" id="DateFrom" name="DateFrom" readonly="readonly" type="text" />
+                                        @*<div class="form-group" id="DateFrom"></div>*@
+                                    </div>
+
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="bmd-label-floating">End Date</label>
+                                        <input class="cust-FormControl" id="DateTo" name="DateTo" readonly="readonly" type="text" />
+                                        @*<span class="fa fa-calendar"></span>*@
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+
+                                        @Html.LabelFor(m => m.Category)
+                                        @Html.DropDownListFor(m => m.Category, Model.SelectCategory, new { @class = "cust-FormControl" })
+
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <p class="font-italic">** Date Format: dd/MM/yyyy</p>
+                                </div>
+                            </div>
+
+                            @*<div class="row">
+
+                                </div>*@
+                        </div>
+
+
+                        <div class="col-lg-4"></div>
+
+
+                        <div class="col-lg-12 text-right">
+                            @*<button type="button" class="btn btn-outline-danger" id="clear-button">Clear</button>*@
+                            <button type="button" class="btn btn-success" id="search-button">Search</button>
+                            <button type="submit" class="btn btn-primary" id="submit-button" name="submit-button" value="submit-button">Export</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card" style="margin-top:60px">
+                <div class="card-header card-header-primary">
+                    <div class="row">
+                        <div class="col-md-6 justify-content-center">
+                            <h4 class="card-title text-left">Transaction Report</h4>
+                        </div>
+
+
+
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <table id="list" class="table table-hover table-bordered table-striped display responsive text-center">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th data-priority="1">Tranx_no</th>
+                                            @*<th data-priority="1">Ah_Name</th>*@
+                                            <th data-priority="1">Description</th>
+                                            <th data-priority="2">On Hand Qty</th>
+                                            <th data-priority="2">Variant Qty</th>
+                                            <th>Type</th>
+                                            <th>Category</th>
+                                            <th>Remark</th>
+                                            <th>PIC</th>
+                                            <th>Date</th>
+
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@section scripts {
+    <link rel="stylesheet" href="~/Content/AdminLTE/plugins/datepicker/jquery-ui.css">
+    <script src="~/Content/AdminLTE/plugins/datepicker/jquery-ui.js"></script>
+    @*<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>*@
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var $list = $('#list').DataTable(
+                {
+                    "responsive": true,
+                    //"searching": false,
+                    "processing": true,
+                    //"serverSide": false,
+
+
+
+                    "ajax": {
+                        "cache": false,
+                        "url": "@Url.RouteUrl("GetTransaction")",
+                        "type": "POST",
+                        "data": function (d) {
+                            if (!d) {
+                                d = {};
+                            }
+                            d.Ah_code = $('#@Html.IdFor(x => x.Ah_code)').val();
+
+                            d.Category = $('#@Html.IdFor(x => x.Category)').val();
+                            d.StartDate = $('#DateFrom').val();
+                            d.EndDate = $('#DateTo').val();
+                            //return d;
+                            return addAntiForgeryToken(d);
+                        }
+                    },
+                    "columns": [
+
+                        {
+                            "data": "ID"
+
+                        },
+                        {
+                            "data": "Tranx_no"
+
+                        },
+                        //{ "data": "Ah_name" },
+                        { "data": "Description" },
+
+                        {
+                            "data": "On_hand_qty"
+                        },
+                        {
+                            "data": "Var_qty"
+                        },
+                        {
+                            "data": "Var_type"
+                        },
+                        {
+                            "data": "Var_cate"
+                        },
+                        {
+                            "data": "Rmk"
+                        },
+                        {
+                            "data": "Add_usn"
+                        },
+                        {
+                            "data": "Add_dt"
+                        },
+
+
+
+                    ]
+                }
+            );
+            $('#search-button').click(function (e) {
+                //if (true) {
+                //    $('html, body').animate({
+                //        scrollTop: $("#list").offset().top
+                //    }, 1000);
+                //    $list.ajax.reload(null, false);
+                //}
+                if (validation()) {
+                    $('html, body').animate({
+                        scrollTop: $("#list").offset().top
+                    }, 1000);
+                    $list.ajax.reload(null, false);
+                    $list.draw(true);
+                }
+
+            });
+
+
+            var datefrom = $("#DateFrom").datepicker({
+
+                changeMonth: true,
+                changeYear: true, dateFormat: 'dd/mm/yy', todayBtn: 1, autoclose: true, todayHighlight: true
+            }).datepicker("setDate", new Date());
+
+
+
+            var dateto = $("#DateTo").datepicker({
+
+                changeMonth: true,
+                changeYear: true, dateFormat: 'dd/mm/yy', autoclose: true, todayHighlight: true
+            }).datepicker("setDate", new Date());
+
+
+
+            $(".main-panel").scroll(function () {
+                datefrom.datepicker('hide');
+                $('#DateFrom').blur();
+                dateto.datepicker('hide');
+                $('#DateTo').blur();
+            });
+
+            $(window).resize(function () {
+                datefrom.datepicker('hide');
+                $('#DateFrom').blur();
+                dateto.datepicker('hide');
+                $('#DateTo').blur();
+            });
+
+         
+
+
+            $("#submit-button").click(function (e) {
+                var form_data = $list.rows().data();
+
+                if (confirm("Confirm export this report?")) {
+
+                var theArray = [];
+              
+                for (var i = 0; i < form_data.length; i++) {
+                    var items = {};
+                    var ID = form_data[i].ID;
+                    var Tranx_no = form_data[i].Tranx_no;
+                    var Description = form_data[i].Description;
+                    var On_hand_qty = form_data[i].On_hand_qty;
+                    var Var_qty = form_data[i].Var_qty;
+                    var Var_type = form_data[i].Var_type;
+                    var Var_cate = form_data[i].Var_cate;
+                    var Rmk = form_data[i].Rmk;
+                    var Add_usn = form_data[i].Add_usn;
+                    var Add_dt = form_data[i].Add_dt;
+
+                    items.ID = ID;
+                    items.Tranx_no = Tranx_no;
+                    items.Description = Description;
+                    items.On_hand_qty = On_hand_qty;
+                    items.Var_qty = Var_qty;
+                    items.Var_type = Var_type;
+                    items.Var_cate = Var_cate;
+                    items.Rmk = Rmk;
+                    items.Add_usn = Add_usn;
+                    items.Add_dt = Add_dt;
+
+
+
+
+
+
+                    $("#hiddenStateID").append("<input type='hidden' id='Tranx_list_" + i + "__ID' name='Tranx_list[" + i + "].ID' value='" + items.ID + "'>");
+                    $("#hiddenStateID").append("<input type='hidden' id='Tranx_list_" + i + "__Tranx_no' name='Tranx_list[" + i + "].Tranx_no' value='" + items.Tranx_no + "'>");
+                    $("#hiddenStateID").append("<input type='hidden' id='Tranx_list_" + i + "__Description' name='Tranx_list[" + i + "].Description' value='" + items.Description + "'>");
+                    $("#hiddenStateID").append("<input type='hidden' id='Tranx_list_" + i + "__On_hand_qty' name='Tranx_list[" + i + "].On_hand_qty' value='" + items.On_hand_qty + "'>");
+                    $("#hiddenStateID").append("<input type='hidden' id='Tranx_list_" + i + "__Var_qty' name='Tranx_list[" + i + "].Var_qty' value='" + items.Var_qty + "'>");
+                    $("#hiddenStateID").append("<input type='hidden' id='Tranx_list_" + i + "__Var_type' name='Tranx_list[" + i + "].Var_type' value='" + items.Var_type + "'>");
+                    $("#hiddenStateID").append("<input type='hidden' id='Tranx_list_" + i + "__Var_cate' name='Tranx_list[" + i + "].Var_cate' value='" + items.Var_cate + "'>");
+                    $("#hiddenStateID").append("<input type='hidden' id='Tranx_list_" + i + "__Rmk' name='Tranx_list[" + i + "].Rmk' value='" + items.Rmk + "'>");
+                    $("#hiddenStateID").append("<input type='hidden' id='Tranx_list_" + i + "__Add_usn' name='Tranx_list[" + i + "].Add_usn' value='" + items.Add_usn + "'>");
+                    $("#hiddenStateID").append("<input type='hidden' id='Tranx_list_" + i + "__Add_dt' name='Tranx_list[" + i + "].Add_dt' value='" + items.Add_dt + "'>");
+
+
+
+                }
+              
+
+                return true;
+            } else {
+                return false;
+            }
+            });
+
+        });
+
+
+            //$('#clear-button').click(function (e) {
+            @* $("#@Html.IdFor(model => model.StartDate)").val('');
+            $("#@Html.IdFor(model => model.EndDate)").val('');*@
+                //$('#DateFrom').val(Date.now.toString("dd/mm/yy"));
+                //$('#DateTo').val();
+                //$list.ajax.reload(null, false);
+                //$list.draw(true);
+            //});
+
+
+
+        // Step 1
+        // Document 里面 不可以有 function哟 
+        function validation() {
+            var IsValid = true;
+            var df = $('#DateFrom').val();
+            var dt = $('#DateTo').val();
+            var splitdf = df.split('/');
+            var splitdt = dt.split('/');
+            var ndf = new Date(splitdf[2], splitdf[1], splitdf[0]);
+            var ndt = new Date(splitdt[2], splitdt[1], splitdt[0]);
+
+            // Step 2 
+            // 你没有这个radio btn 所以 remark起来
+            //if ($("input[name='DateType']:checked").val() == '1') {
+            if (ndf > ndt) {
+
+                    // Step 3
+                    // 因为你没有这个returnmodel func 所以走不到
+                    //returnModalMsg(2, 'End Date cannot less then Start Date. Please select again.');
+                    alert('End Date cannot less then Start Date. Please select again.');
+                    IsValid = false;
+                }
+            //}
+            return IsValid;
+        }
+
+
+
+
+
+
+
+    </script>
+}

@@ -1,0 +1,159 @@
+﻿
+@model Consignment_Control.Models.StockTake.StockTakeModel
+
+@{
+    ViewBag.Title = "StockTake";
+
+}
+
+@section Breadcrumbs
+{
+    <div class="navbar-wrapper">
+        <a class="navbar-brand" href="javascript:;">Stock Take - View</a>
+    </div>
+
+}
+
+
+@section Content
+{
+    @using (Html.BeginForm())
+    {
+
+        @Html.AntiForgeryToken()
+
+        <div class="row">
+            <div class="card">
+
+                <div class="card-body text-right">
+
+                    <a href="@Url.RouteUrl("StockTake")" class="btn btn-primary">New Stock Take</a>
+
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header card-header-primary">
+                    <div class="row">
+                        <div class="col-md-6 justify-content-center">
+                            <h4 class="card-title text-left">Stock Take Details</h4>
+                        </div>
+
+
+                        @*<div class="col-md-6 text-right">
+                                <button type="submit" class="btn btn-primary" id="print-button" name="print-button" value="print-button">Print PDF</button>
+                            </div>*@
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+
+
+                        @*<div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.StatusCode)
+                                    @Html.DropDownListFor(m => m.StatusCode, Model.SelectStatus, new { @class = "cust-FormControl" })
+                                </div>
+
+                            </div>*@
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @Html.LabelFor(m => m.AccountHolderCode)
+                                @Html.DropDownListFor(m => m.AccountHolderCode, Model.SelectAccountHolder, new { @class = "cust-FormControl" })
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <table id="list" class="table table-hover table-bordered table-striped display responsive text-center">
+                                    <thead>
+                                        <tr>
+                                            @*<th>ID</th>*@
+                                            <th data-priority="1">Tranx No.</th>
+                                            <th>Catalog No</th>
+                                            <th data-priority="1">Description</th>
+                                            <th data-priority="1">On Hand Quantity</th>
+                                            <th data-priority="1">Counted Quantity</th>
+
+
+                                            @*<th>Action</th>*@
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        </div>
+
+    }
+}
+
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var $list = $('#list').DataTable(
+                {
+                    "responsive": true,
+                    "ordering": false,
+
+
+
+                    "ajax": {
+                        "cache": false,
+                        "url": "@Url.RouteUrl("GetStockTakeLog")",
+                        "type": "POST",
+                        "data": function (d) {
+                            if (!d) {
+                                d = {};
+                            }
+
+                            d.ah_code = $('#@Html.IdFor(x => x.AccountHolderCode)').val();
+                            //return d;
+                            return addAntiForgeryToken(d);
+                        }
+                    },
+                    "columns": [
+                        {
+                            "data": "Tranx_no",
+                         
+                        },
+                        { "data": "Catalog" },
+                        { "data": "Description" },
+                        { "data": "On_hand_qty" },
+                        {
+                            "data": "Counted_qty"
+                        },
+
+                        //{ "data": "Counted_on_hold_qty" },
+
+                   
+
+                    ]
+                });
+
+
+            //window.onbeforeunload = function () {
+            //    if (confirm("Confirm to save this stock take list")) {
+            //        //return true;
+            //        //e.preventDefault();
+            //        return true;
+            //    } else {
+            //        return false;
+            //    }
+            //}
+
+        });
+    </script>
+}
+

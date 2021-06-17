@@ -1,0 +1,78 @@
+﻿@model Consignment_Control.Models.Settings.ConsigneeDetailsModel
+
+@{
+    ViewBag.Title = "StockTake";
+
+}
+
+@section Breadcrumbs
+{
+    <div class="navbar-wrapper">
+        <a class="navbar-brand" href="javascript:;">Settings - Add Consignee</a>
+    </div>
+
+}
+
+
+@section Content
+{
+    @using (Html.BeginForm())
+    {
+
+        @Html.AntiForgeryToken()
+
+        <div class="row">
+            <div class="card">
+
+                <div class="card-body text-right">
+                    <button type="submit" class="btn btn-primary" id="submit-button" name="submit-button" value="submit-button">Save</button>
+                    @*<button type="submit" class="btn btn-primary" id="print-button" name="print-button" value="print-button">Print PDF</button>
+
+                        <a href="@Url.RouteUrl("ViewStockTake")" class="btn btn-primary">View</a>*@
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header card-header-primary">
+                    <div class="row">
+                        <div class="col-md-6 justify-content-center">
+                            <h4 class="card-title text-left">Add Consignee</h4>
+                        </div>
+
+
+
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form>
+                        <div class="row">
+
+
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+
+                                    @Html.LabelFor(m => m.Ah_code)
+                                    @Html.EditorFor(model => model.Ah_code, new { htmlAttributes = new { @class = "cust-FormControl" } })
+                                </div>
+
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+
+                                    @Html.LabelFor(m => m.Ah_name)
+                                    @Html.EditorFor(model => model.Ah_name, new { htmlAttributes = new { @class = "cust-FormControl" } })
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+

@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1340
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Consignment_Control", "Consignment_Control\Consignment_Control.csproj", "{4997E59A-403E-4386-9C01-0C43274815F9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4997E59A-403E-4386-9C01-0C43274815F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4997E59A-403E-4386-9C01-0C43274815F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4997E59A-403E-4386-9C01-0C43274815F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4997E59A-403E-4386-9C01-0C43274815F9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F57D4EBA-E949-40ED-AC85-037A5080DE7D}
+	EndGlobalSection
+EndGlobal

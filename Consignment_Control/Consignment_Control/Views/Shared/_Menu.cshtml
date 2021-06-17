@@ -1,0 +1,57 @@
+﻿
+@using Consignment_Control.Library.Setting
+<div class="sidebar" data-color="purple" data-background-color="white" data-image="../../Content/MainDesign/assets/img/sidebar-3.jpg">
+    <!--
+        Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
+
+        Tip 2: you can also add an image using data-image tag
+    -->
+
+    <div class="logo">
+        <a href="#" class="simple-text logo-normal">
+           Consignment Control
+        </a>
+    </div>
+    <div class="sidebar-wrapper">
+        <ul class="nav">
+            <li class="nav-item @Html.IsActive("Home", "Index")">
+                <a class="nav-link" href="@Url.RouteUrl("HomePage")">
+                    <i class="material-icons">dashboard</i>
+                    <p>DASHBOARD</p>
+                </a>
+            </li>
+            <li class="nav-item @Html.IsActive("StockTake", "Create")  @Html.IsActive("StockTake", "ViewStockTake")">
+                <a class="nav-link " href="@Url.RouteUrl("StockTake")">
+                    <i class="material-icons">task</i>
+                    <p>STOCK TAKE</p>
+                </a>
+            </li>
+
+            <li class="nav-item @Html.IsActive("StockTake", "Certify")  @Html.IsActive("StockTake", "Delivery") ">
+                <a class="nav-link " href="@Url.RouteUrl("StockTakeCertify")">
+                    <i class="material-icons">task</i>
+                    <p>CERTIFY / DELIVERED</p>
+                </a>
+            </li>
+            <li class="nav-item @Html.IsActive("Inventory", "Inventory")  @Html.IsActive("Inventory", "Adjustment")">
+                <a class="nav-link" href="@Url.RouteUrl("Inventory")">
+                    <i class="material-icons">inventory_2</i>
+                    <p>INVENTORY</p>
+                </a>
+            </li>
+            <li class="nav-item @Html.IsActive("Report", "Report") ">
+                <a class="nav-link" href="@Url.RouteUrl("Report")">
+                    <i class="material-icons">library_books</i>
+                    <p>REPORT</p>
+                </a>
+            </li>
+
+            <li class="nav-item  @Html.IsActive("Consignee", "ViewConsignee") ">
+                <a class="nav-link" href="@Url.RouteUrl("ViewConsignee")">
+                    <i class="material-icons">settings</i>
+                    <p>SETTINGS</p>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

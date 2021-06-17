@@ -1,0 +1,37 @@
+﻿@{ 
+    var version = System.Configuration.ConfigurationManager.AppSettings["System:Version"].ToString();
+    var systemTitle = System.Configuration.ConfigurationManager.AppSettings["System:Title"].ToString();
+    var systemMenuTitle = System.Configuration.ConfigurationManager.AppSettings["System:MenuTitle"].ToString();
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title - @systemMenuTitle</title>
+    @Styles.Render("https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap")
+    @Styles.Render("https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css")
+    @Styles.Render("~/Content/Login/css/style.css")
+   
+</head>
+<body class="img js-fullheight" style="background-image: url(../../Content/Login/Media/Picture/bg.jpg);">
+    <section class="ftco-section">
+        <div class="container">
+            @RenderBody()
+            <center>
+                <hr />
+                <footer>
+                    <p style="color:white">&copy; @DateTime.Now.Year - Powered by @systemTitle | Version @version </p>
+                </footer>
+            </center>
+         
+        </div>
+    
+    </section>
+
+        @Scripts.Render("~/Content/Login/js/jquery.min.js")
+        @Scripts.Render("~/Content/Login/js/popper.js")
+        @Scripts.Render("~/Content/Login/js/bootstrap.min.js")
+        @Scripts.Render("~/Content/Login/js/main.js")
+</body>
+</html>

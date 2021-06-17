@@ -1,0 +1,157 @@
+﻿@model Consignment_Control.Models.Inventory.InventoryDetailsModel
+@{
+    ViewBag.Title = "StockTake";
+
+}
+
+@section Breadcrumbs
+{
+    <div class="navbar-wrapper">
+        <a class="navbar-brand" href="javascript:;">Stock Take - Adjustment</a>
+    </div>
+
+}
+
+
+@section Content
+{
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.ID)
+        @Html.HiddenFor(m => m.Ah_Code)
+        <div id="hiddenStateID"></div>
+        <div class="row">
+            <div class="card">
+
+                <div class="card-body text-right">
+                    <button type="submit" class="btn btn-primary" id="submit-button" name="submit-button" value="submit-button">Save</button>
+                    @*<button type="submit" class="btn btn-primary" id="print-button" name="print-button" value="print-button">Print PDF</button>
+
+                        <a href="@Url.RouteUrl("ViewStockTake")" class="btn btn-primary">View</a>*@
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header card-header-primary">
+                    <div class="row">
+                        <div class="col-md-6 justify-content-center">
+                            <h4 class="card-title text-left">Adjustment</h4>
+                        </div>
+
+
+
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form>
+                        <div class="row">
+
+
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.Catalog)
+                                    @Html.EditorFor(model => model.Catalog, new { htmlAttributes = new { @class = "cust-FormControl", @readonly = "readonly" } })
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.Description)
+                                    @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "cust-FormControl", @readonly = "readonly" } })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.On_hand_qty)
+                                    @Html.EditorFor(model => model.On_hand_qty, new { htmlAttributes = new { @class = "cust-FormControl ", @readonly = "readonly" } })
+                                </div>
+                            </div>
+                            @*<div class="col-md-2">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.On_hand_qty)
+                                        @Html.EditorFor(model => model.On_hand_qty, new { htmlAttributes = new { @class = "cust-FormControl ", @readonly = "readonly" } })
+                                    </div>
+                                </div>*@
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="bmd-label-floating">Type</label>
+                                    <select class="cust-FormControl" id="ddltype">
+                                        <option>IN</option>
+                                        <option>OUT</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    @Html.LabelFor(m => m.Adjust_qty)
+                                    @*type='number' step='1' pattern='[0 - 9]' onkeypress='return !(event.charCode == 46)' min='0'*@
+                                    @Html.EditorFor(model => model.Adjust_qty, new { htmlAttributes = new { @class = "cust-FormControl IsAllowNumberOnly" } })
+                                    @*<input name="Adjust_qty" id="Adjust_qty" class ="cust-FormControl IsAllowNumberOnly"    type="number" step="1" pattern="[0 - 9]" onkeypress="return !(event.charCode == 46)" />*@
+                                </div>
+                            </div>
+                        </div>
+
+                        @*<div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.To_bill_qty)
+                                        @Html.EditorFor(model => model.To_bill_qty, new { htmlAttributes = new { @class = "cust-FormControl IsAllowNumberOnly" } })
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.Pro_qty)
+                                        @Html.EditorFor(model => model.Pro_qty, new { htmlAttributes = new { @class = "cust-FormControl IsAllowNumberOnly" } })
+                                    </div>
+                                </div>
+                            </div>*@
+
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+
+
+                                    @Html.LabelFor(m => m.Rmk)
+                                    @Html.EditorFor(model => model.Rmk, new { htmlAttributes = new { @class = "cust-FormControl" } })
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+
+}
+
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#submit-button").click(function (e) {
+                var e = document.getElementById("ddltype");
+                var Type = e.value;
+                var Category = "ADJUSTMENT";
+                if (confirm("Confirm to adjust?")) {
+
+
+                    $("#hiddenStateID").append("<input type='hidden' id='Var_type' name='Var_type' value='" + Type + "'>");
+                    $("#hiddenStateID").append("<input type='hidden' id='Var_cate' name='Var_cate' value='" + Category + "'>");
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+        });
+    </script>
+}
+
+
+
